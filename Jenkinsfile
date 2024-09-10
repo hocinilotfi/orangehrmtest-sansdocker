@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    environment {
+        MAVEN_HOME = '/usr/share/maven'  // Chemin sur l'hôte où Maven est installé
+        PATH = "${MAVEN_HOME}/bin:${env.PATH}"  // Ajoute Maven au PATH
+    }
+
     stages {
         stage('Checkout Code') {
             steps {
@@ -23,8 +28,6 @@ pipeline {
             steps {
                 script {
                     try {
-                        // Assurez-vous que le serveur Selenium est en cours d'exécution
-                        // Par exemple, utilisez une commande ou un script pour démarrer Selenium si nécessaire
                         sh 'mvn test -Dcucumber.plugin="json:target/cucumber-report/cucumber-report.json"'
                     } catch (Exception e) {
                         currentBuild.result = 'FAILURE'
@@ -37,7 +40,6 @@ pipeline {
     post {
         always {
             cucumber 'target/cucumber-report/cucumber-report.json'
-            // Nettoyage, si nécessaire
         }
     }
 }
