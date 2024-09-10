@@ -1,48 +1,31 @@
 package logwire.tools;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class WebDriverManagerClass {
     private static WebDriver driver;
-    private static final String SELENIUM_GRID_URL = "http://selenium-hub:4444/wd/hub"; // URL de votre Selenium Grid
-
-    public static WebDriver getDriver() {
+        public static WebDriver getDriver() {
         if (driver == null) {
             String browser = System.getProperty("browser", "chrome");
-
-            DesiredCapabilities capabilities = new DesiredCapabilities();
-
+            
             switch (browser.toLowerCase()) {
                 case "firefox":
-                    capabilities.setBrowserName("firefox");
+                    // System.setProperty("webdriver.gecko.driver", "path/to/geckodriver");
                     FirefoxOptions firefoxOptions = new FirefoxOptions();
-                    firefoxOptions.addArguments("--headless");
-                    capabilities.setCapability(FirefoxOptions.FIREFOX_OPTIONS, firefoxOptions);
+                    firefoxOptions.addArguments("--headless=new");
+                    driver = new FirefoxDriver();
                     break;
                 case "chrome":
                 default:
-                    capabilities.setBrowserName("chrome");
+                    // System.setProperty("webdriver.chrome.driver", "path/to/chromedriver");
                     ChromeOptions chromeOptions = new ChromeOptions();
-                    chromeOptions.addArguments("--headless");
-                    chromeOptions.addArguments("--no-sandbox");
-                    chromeOptions.addArguments("--disable-dev-shm-usage");
-                    capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
+                    chromeOptions.addArguments("--headless=new"); 
+                    driver = new ChromeDriver(chromeOptions);
                     break;
-            }
-
-            try {
-                driver = new RemoteWebDriver(new URL(SELENIUM_GRID_URL), capabilities);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-                throw new RuntimeException("URL malformed for Selenium Grid: " + SELENIUM_GRID_URL);
             }
         }
         return driver;

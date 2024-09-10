@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                git branch: 'main', credentialsId: '', url: 'https://github.com/hocinilotfi/orangehrmtest.git'
+                git branch: 'main', credentialsId: '', url: 'https://github.com/hocinilotfi/orangehrmtest-sansdocker.git'
             }
         }
         stage('Build Maven Project') {
